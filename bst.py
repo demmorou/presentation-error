@@ -1,8 +1,8 @@
 import random
+import matplotlib.pyplot as plt
 
 
 def create_vector_to_insertion(case, nodes):
-
     insertion = []
 
     if case == 0:
@@ -10,7 +10,7 @@ def create_vector_to_insertion(case, nodes):
             insertion.append(_)
     elif case == 1:
         while len(insertion) < nodes:
-            n = random.randint(0, 20)
+            n = random.randint(0, 100000)
             if n not in insertion:
                 insertion.append(n)
 
@@ -20,7 +20,6 @@ def create_vector_to_insertion(case, nodes):
 class Node:
 
     def __init__(self, key):
-
         self.key = key
         self.left = None
         self.right = None
@@ -67,16 +66,16 @@ class bst:
             self.view_in_order(node.right)
 
 
-class AVLTree():
+class avl:
 
     def __init__(self):
-        self.node = None
+        self.root = None
         self.height = -1
         self.balance = 0
 
     def height(self):
-        if self.node:
-            return self.node.height
+        if self.root:
+            return self.root.height
         else:
             return 0
 
@@ -84,20 +83,20 @@ class AVLTree():
         return self.height == 0
 
     def insert(self, key):
-        node = self.node
+        node = self.root
 
         current_node = Node(key)
 
         if node is None:
-            self.node = current_node
-            self.node.left = AVLTree()
-            self.node.right = AVLTree()
+            self.root = current_node
+            self.root.left = avl()
+            self.root.right = avl()
 
         elif key < node.key:
-            self.node.left.insert(key)
+            self.root.left.insert(key)
 
         elif key > node.key:
-            self.node.right.insert(key)
+            self.root.right.insert(key)
 
         self.rebalance()
 
@@ -108,8 +107,8 @@ class AVLTree():
         self.update_balances(False)
         while self.balance < -1 or self.balance > 1:
             if self.balance > 1:
-                if self.node.left.balance < 0:
-                    self.node.left.lrotate()  # we're in case II
+                if self.root.left.balance < 0:
+                    self.root.left.lrotate()  # we're in case II
                     self.update_heights()
                     self.update_balances()
                 self.rrotate()
@@ -117,8 +116,8 @@ class AVLTree():
                 self.update_balances()
 
             if self.balance < -1:
-                if self.node.right.balance > 0:
-                    self.node.right.rrotate()  # we're in case III
+                if self.root.right.balance > 0:
+                    self.root.right.rrotate()  # we're in case III
                     self.update_heights()
                     self.update_balances()
                 self.lrotate()
@@ -127,129 +126,125 @@ class AVLTree():
 
     def rrotate(self):
         # Rotate left pivoting on self
-        A = self.node
-        B = self.node.left.node
+        A = self.root
+        B = self.root.left.node
         T = B.right.node
 
-        self.node = B
+        self.root = B
         B.right.node = A
         A.left.node = T
 
     def lrotate(self):
         # Rotate left pivoting on self
-        A = self.node
-        B = self.node.right.node
+        A = self.root
+        B = self.root.right.node
         T = B.left.node
 
-        self.node = B
+        self.root = B
         B.left.node = A
         A.right.node = T
 
     def update_heights(self, recurse=True):
-        if not self.node == None:
+        if not self.root == None:
             if recurse:
-                if self.node.left != None:
-                    self.node.left.update_heights()
-                if self.node.right != None:
-                    self.node.right.update_heights()
+                if self.root.left != None:
+                    self.root.left.update_heights()
+                if self.root.right != None:
+                    self.root.right.update_heights()
 
-            self.height = max(self.node.left.height,
-                              self.node.right.height) + 1
+            self.height = max(self.root.left.height,
+                              self.root.right.height) + 1
         else:
             self.height = -1
 
     def update_balances(self, recurse=True):
-        if not self.node == None:
+        if not self.root is None:
             if recurse:
-                if self.node.left != None:
-                    self.node.left.update_balances()
-                if self.node.right != None:
-                    self.node.right.update_balances()
+                if self.root.left is not None:
+                    self.root.left.update_balances()
+                if self.root.right is not None:
+                    self.root.right.update_balances()
 
-            self.balance = self.node.left.height - self.node.right.height
+            self.balance = self.root.left.height - self.root.right.height
         else:
             self.balance = 0
 
     def delete(self, key):
         # debug("Trying to delete at node: " + str(self.node.key))
-        if self.node != None:
-            if self.node.key == key:
-                if self.node.left.node == None and self.node.right.node == None:
-                    self.node = None  # leaves can be killed at will
+        if self.root is not None:
+            if self.root.key == key:
+                if self.root.left.node is None and self.root.right.node is None:
+                    self.root = None  # leaves can be killed at will
                 # if only one subtree, take that
-                elif self.node.left.node == None:
-                    self.node = self.node.right.node
-                elif self.node.right.node == None:
-                    self.node = self.node.left.node
+                elif self.root.left.node is None:
+                    self.root = self.root.right.node
+                elif self.root.right.node is None:
+                    self.root = self.root.left.node
 
                 # worst-case: both children present. Find logical successor
                 else:
-                    replacement = self.logical_successor(self.node)
-                    if replacement != None:  # sanity check
-                        self.node.key = replacement.key
+                    replacement = self.logical_successor(self.root)
+                    if replacement is not None:  # sanity check
+                        self.root.key = replacement.key
 
                         # replaced. Now delete the key from right child
-                        self.node.right.delete(replacement.key)
+                        self.root.right.delete(replacement.key)
 
                 self.rebalance()
                 return
-            elif key < self.node.key:
-                self.node.left.delete(key)
-            elif key > self.node.key:
-                self.node.right.delete(key)
+            elif key < self.root.key:
+                self.root.left.delete(key)
+            elif key > self.root.key:
+                self.root.right.delete(key)
 
             self.rebalance()
         else:
             return
 
     def logical_predecessor(self, node):
-        '''
-        Find the biggest valued node in LEFT child
-        '''
+
         node = node.left.node
-        if node != None:
-            while node.right != None:
-                if node.right.node == None:
+        if node is not None:
+            while node.right is not None:
+                if node.right.node is None:
                     return node
                 else:
                     node = node.right.node
         return node
 
     def logical_successor(self, node):
-        '''
-        Find the smallese valued node in RIGHT child
-        '''
-        node = node.right.node
-        if node != None:  # just a sanity check
 
-            while node.left != None:
-                if node.left.node == None:
+        node = node.right.node
+        if node is not None:  # just a sanity check
+
+            while node.left is not None:
+                if node.left.node is None:
                     return node
                 else:
                     node = node.left.node
         return node
 
     def check_balanced(self):
-        if self == None or self.node == None:
+        if self is None or self.root is None:
             return True
 
         # We always need to make sure we are balanced
         self.update_heights()
         self.update_balances()
-        return ((abs(self.balance) < 2) and self.node.left.check_balanced() and self.node.right.check_balanced())
+        return (abs(self.balance) < 2) and self.root.left.check_balanced() and self.root.right.check_balanced()
 
     def inorder_traverse(self):
-        if self.node == None:
+        if self.root is None:
             return []
 
         inlist = []
-        l = self.node.left.inorder_traverse()
+        l = self.root.left.inorder_traverse()
         for i in l:
             inlist.append(i)
 
-        inlist.append(self.node.key)
+        inlist.append(self.root.key)
 
-        l = self.node.right.inorder_traverse()
+        l = self.root.right.inorder_traverse()
         for i in l:
             inlist.append(i)
 
@@ -259,7 +254,8 @@ class AVLTree():
 if __name__ == "__main__":
 
     cost = []
-
+    cost2 = []
+    p = 0
     while True:
         try:
 
@@ -284,12 +280,20 @@ if __name__ == "__main__":
                 for _ in range(number_nodes):
                     tree_bst.insert(elements[_])
                     print(elements[_], end=' ')
-                    if _ % 2 == 0:
+                    if _ % 1000 == 0:
                         cost.append(tree_bst.cont)
+                        cost2.append(p)
+                    p += 1
+
                 print()
-                tree_bst.view_in_order(tree_bst.root)
-                print('\ncosts ', cost)
-                cost = []
+                # tree_bst.view_in_order(tree_bst.root)
+
+                plt.plot(cost, cost2, color='red')
+                plt.title('complexity')
+                plt.xlabel('elements')
+                plt.ylabel('search')
+                plt.show()
+
             elif type_tree == 1:
                 print('tree avl')
             elif type_tree == 2:
