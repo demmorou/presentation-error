@@ -68,15 +68,11 @@ class bst:
 
 class avl:
 
-    def __init__(self, *args):
+    def __init__(self):
         self.node = None
         self.height = -1
         self.balance = 0
         self.cont = 0
-
-        if len(args) == 1:
-            for i in args[0]:
-                self.insert(i)
 
     def height(self):
         if self.node:
@@ -90,10 +86,10 @@ class avl:
     def insert(self, key):
         tree = self.node
 
-        newnode = Node(key)
+        new_node = Node(key)
 
         if tree is None:
-            self.node = newnode
+            self.node = new_node
             self.node.left = avl()
             self.node.right = avl()
 
@@ -130,43 +126,42 @@ class avl:
 
     def rrotate(self):
         # Rotate left pivoting on self
-        A = self.node
-        B = self.node.left.node
-        T = B.right.node
+        a = self.node
+        b = self.node.left.node
+        t = b.right.node
 
-        self.node = B
-        B.right.node = A
-        A.left.node = T
+        self.node = b
+        b.right.node = a
+        a.left.node = t
 
     def lrotate(self):
         # Rotate left pivoting on self
         A = self.node
-        B = self.node.right.node
-        T = B.left.node
+        b = self.node.right.node
+        t = b.left.node
 
-        self.node = B
-        B.left.node = A
-        A.right.node = T
+        self.node = b
+        b.left.node = A
+        A.right.node = t
 
     def update_heights(self, recurse=True):
-        if not self.node == None:
+        if not self.node is None:
             if recurse:
-                if self.node.left != None:
+                if self.node.left is not None:
                     self.node.left.update_heights()
-                if self.node.right != None:
+                if self.node.right is not None:
                     self.node.right.update_heights()
 
-            self.height = max(self.node.left.height,
-                              self.node.right.height) + 1
+            self.height = max(self.node.left.height, self.node.right.height) + 1
         else:
             self.height = -1
 
     def update_balances(self, recurse=True):
-        if not self.node == None:
+        if not self.node is None:
             if recurse:
-                if self.node.left != None:
+                if self.node.left is not None:
                     self.node.left.update_balances()
-                if self.node.right != None:
+                if self.node.right is not None:
                     self.node.right.update_balances()
 
             self.balance = self.node.left.height - self.node.right.height
@@ -245,8 +240,8 @@ if __name__ == "__main__":
                         cost2.append(p)
                     p += 1
                 print()
-                # for _ in tree_avl.view_in_order():
-                #     print(_, end=' ')
+                for _ in tree_avl.view_in_order():
+                    print(_, end=' ')
             elif type_tree == 2:
                 print('tree rbt')
             else:
