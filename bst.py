@@ -186,7 +186,7 @@ class avl:
         return inlist
 
 
-class Node_1:
+class Node_rbt:
     RED = True
     BLACK = False
 
@@ -195,7 +195,7 @@ class Node_1:
             raise TypeError("Bad value for color parameter, expected True/False but given %s" % color)
         self.color = color
         self.key = key
-        self.left = self.right = self.parent = NilNode.instance()
+        self.left = self.right = self.parent = NilNode_rbt.instance()
 
     def __str__(self, level=0, indent="   "):
         s = level * indent + str(self.key)
@@ -212,17 +212,17 @@ class Node_1:
         return True
 
 
-class NilNode(Node_1):
+class NilNode_rbt(Node_rbt):
     __instance__ = None
 
     @classmethod
     def instance(self):
         if self.__instance__ is None:
-            self.__instance__ = NilNode()
+            self.__instance__ = NilNode_rbt()
         return self.__instance__
 
     def __init__(self):
-        self.color = Node_1.BLACK
+        self.color = Node_rbt.BLACK
         self.key = None
         self.left = self.right = self.parent = None
 
@@ -233,51 +233,51 @@ class NilNode(Node_1):
         return False
 
 
-class RedBlackTree:
+class rbt:
     def __init__(self):
-        self.root = NilNode.instance()
+        self.root = NilNode_rbt.instance()
         self.size = 0
 
     def __str__(self):
         return ("(root.size = %d)\n" % self.size) + str(self.root)
 
     def add(self, key):
-        self.insert(Node_1(key))
+        self.insert(Node_rbt(key))
 
     def insert(self, x):
         self.__insert_helper(x)
 
-        x.color = Node_1.RED
-        while x != self.root and x.parent.color == Node_1.RED:
+        x.color = Node_rbt.RED
+        while x != self.root and x.parent.color == Node_rbt.RED:
             if x.parent == x.parent.parent.left:
                 y = x.parent.parent.right
-                if y and y.color == Node_1.RED:
-                    x.parent.color = Node_1.BLACK
-                    y.color = Node_1.BLACK
-                    x.parent.parent.color = Node_1.RED
+                if y and y.color == Node_rbt.RED:
+                    x.parent.color = Node_rbt.BLACK
+                    y.color = Node_rbt.BLACK
+                    x.parent.parent.color = Node_rbt.RED
                     x = x.parent.parent
                 else:
                     if x == x.parent.right:
                         x = x.parent
                         self.__left_rotate(x)
-                    x.parent.color = Node_1.BLACK
-                    x.parent.parent.color = Node_1.RED
+                    x.parent.color = Node_rbt.BLACK
+                    x.parent.parent.color = Node_rbt.RED
                     self.__right_rotate(x.parent.parent)
             else:
                 y = x.parent.parent.left
-                if y and y.color == Node_1.RED:
-                    x.parent.color = Node_1.BLACK
-                    y.color = Node_1.BLACK
-                    x.parent.parent.color = Node_1.RED
+                if y and y.color == Node_rbt.RED:
+                    x.parent.color = Node_rbt.BLACK
+                    y.color = Node_rbt.BLACK
+                    x.parent.parent.color = Node_rbt.RED
                     x = x.parent.parent
                 else:
                     if x == x.parent.left:
                         x = x.parent
                         self.__right_rotate(x)
-                    x.parent.color = Node_1.BLACK
-                    x.parent.parent.color = Node_1.RED
+                    x.parent.color = Node_rbt.BLACK
+                    x.parent.parent.color = Node_rbt.RED
                     self.__left_rotate(x.parent.parent)
-        self.root.color = Node_1.BLACK
+        self.root.color = Node_rbt.BLACK
 
     def delete(self, z):
         if not z.left or not z.right:
@@ -300,7 +300,7 @@ class RedBlackTree:
 
         if y != z: z.key = y.key
 
-        if y.color == Node_1.BLACK:
+        if y.color == Node_rbt.BLACK:
             self.__delete_fixup(x)
 
         self.size -= 1
@@ -336,14 +336,14 @@ class RedBlackTree:
             y = y.parent
         return y
 
-    def inorder_walk(self, x=None):
+    def view_in_order(self, x=None):
         if x is None: x = self.root
         x = self.minimum()
         while x:
             yield x.key
             x = self.successor(x)
 
-    def reverse_inorder_walk(self, x=None):
+    def reverse_view_in_order(self, x=None):
         if x is None: x = self.root
         x = self.maximum()
         while x:
@@ -406,7 +406,7 @@ class RedBlackTree:
         x.parent = y
 
     def __insert_helper(self, z):
-        y = NilNode.instance()
+        y = NilNode_rbt.instance()
         x = self.root
         while x:
             y = x
@@ -427,50 +427,50 @@ class RedBlackTree:
         self.size += 1
 
     def __delete_fixup(self, x):
-        while x != self.root and x.color == Node_1.BLACK:
+        while x != self.root and x.color == Node_rbt.BLACK:
             if x == x.parent.left:
                 w = x.parent.right
-                if w.color == Node_1.RED:
-                    w.color = Node_1.BLACK
-                    x.parent.color = Node_1.RED
+                if w.color == Node_rbt.RED:
+                    w.color = Node_rbt.BLACK
+                    x.parent.color = Node_rbt.RED
                     self.__left_rotate(x.parent)
                     w = x.parent.right
-                if w.left.color == Node_1.BLACK and w.right.color == Node_1.BLACK:
-                    w.color = Node_1.RED
+                if w.left.color == Node_rbt.BLACK and w.right.color == Node_rbt.BLACK:
+                    w.color = Node_rbt.RED
                     x = x.parent
                 else:
-                    if w.right.color == Node_1.BLACK:
-                        w.left.color = Node_1.BLACK
-                        w.color = Node_1.RED
+                    if w.right.color == Node_rbt.BLACK:
+                        w.left.color = Node_rbt.BLACK
+                        w.color = Node_rbt.RED
                         self.__right_rotate(w)
                         w = x.parent.right
                     w.color = x.parent.color
-                    x.parent.color = Node_1.BLACK
-                    w.right.color = Node_1.BLACK
+                    x.parent.color = Node_rbt.BLACK
+                    w.right.color = Node_rbt.BLACK
                     self.__left_rotate(x.parent)
                     x = self.root
             else:
                 w = x.parent.left
-                if w.color == Node_1.RED:
-                    w.color = Node_1.BLACK
-                    x.parent.color = Node_1.RED
+                if w.color == Node_rbt.RED:
+                    w.color = Node_rbt.BLACK
+                    x.parent.color = Node_rbt.RED
                     self.__right_rotate(x.parent)
                     w = x.parent.left
-                if w.right.color == Node_1.BLACK and w.left.color == Node_1.BLACK:
-                    w.color = Node_1.RED
+                if w.right.color == Node_rbt.BLACK and w.left.color == Node_rbt.BLACK:
+                    w.color = Node_rbt.RED
                     x = x.parent
                 else:
-                    if w.left.color == Node_1.BLACK:
-                        w.right.color = Node_1.BLACK
-                        w.color = Node_1.RED
+                    if w.left.color == Node_rbt.BLACK:
+                        w.right.color = Node_rbt.BLACK
+                        w.color = Node_rbt.RED
                         self.__left_rotate(w)
                         w = x.parent.left
                     w.color = x.parent.color
-                    x.parent.color = Node_1.BLACK
-                    w.left.color = Node_1.BLACK
+                    x.parent.color = Node_rbt.BLACK
+                    w.left.color = Node_rbt.BLACK
                     self.__right_rotate(x.parent)
                     x = self.root
-        x.color = Node_1.BLACK
+        x.color = Node_rbt.BLACK
 
 
 if __name__ == "__main__":
@@ -531,12 +531,12 @@ if __name__ == "__main__":
                     print(_, end=' ')
             elif type_tree == 2:
                 print('tree rbt')
-                tree_rbt = RedBlackTree()
+                tree_rbt = rbt()
                 for _ in range(number_nodes):
                     tree_rbt.add(elements[_])
                     print(elements[_], end=' ')
                 print()
-                for key in tree_rbt.inorder_walk():
+                for key in tree_rbt.view_in_order():
                     print(key, end=' ')
             else:
                 break
