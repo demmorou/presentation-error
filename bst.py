@@ -312,33 +312,6 @@ class rbt:
                     self.__left_rotate(x.parent.parent)
         self.root.color = Node_rbt.BLACK
 
-    def delete(self, z):
-        if not z.left or not z.right:
-            y = z
-        else:
-            y = self.successor(z)
-        if not y.left:
-            x = y.right
-        else:
-            x = y.left
-        x.parent = y.parent
-
-        if not y.parent:
-            self.root = x
-        else:
-            if y == y.parent.left:
-                y.parent.left = x
-            else:
-                y.parent.right = x
-
-        if y != z: z.key = y.key
-
-        if y.color == Node_rbt.BLACK:
-            self.__delete_fixup(x)
-
-        self.size -= 1
-        return y
-
     def minimum(self, x=None):
         if x is None: x = self.root
         while x.left:
@@ -360,28 +333,12 @@ class rbt:
             y = y.parent
         return y
 
-    def predecessor(self, x):
-        if x.left:
-            return self.maximum(x.left)
-        y = x.parent
-        while y and x == y.left:
-            x = y
-            y = y.parent
-        return y
-
     def view_in_order(self, x=None):
         if x is None: x = self.root
         x = self.minimum()
         while x:
             yield x.key
             x = self.successor(x)
-
-    def reverse_view_in_order(self, x=None):
-        if x is None: x = self.root
-        x = self.maximum()
-        while x:
-            yield x.key
-            x = self.predecessor(x)
 
     def search(self, key, x=None):
         if x is None: x = self.root
@@ -391,18 +348,6 @@ class rbt:
             else:
                 x = x.right
         return x
-
-    def is_empty(self):
-        return bool(self.root)
-
-    def black_height(self, x=None):
-        if x is None: x = self.root
-        height = 0
-        while x:
-            x = x.left
-            if not x or x.is_black():
-                height += 1
-        return height
 
     def __left_rotate(self, x):
         if not x.right:
@@ -458,53 +403,6 @@ class rbt:
                 y.right = z
 
         self.size += 1
-
-    def __delete_fixup(self, x):
-        while x != self.root and x.color == Node_rbt.BLACK:
-            if x == x.parent.left:
-                w = x.parent.right
-                if w.color == Node_rbt.RED:
-                    w.color = Node_rbt.BLACK
-                    x.parent.color = Node_rbt.RED
-                    self.__left_rotate(x.parent)
-                    w = x.parent.right
-                if w.left.color == Node_rbt.BLACK and w.right.color == Node_rbt.BLACK:
-                    w.color = Node_rbt.RED
-                    x = x.parent
-                else:
-                    if w.right.color == Node_rbt.BLACK:
-                        w.left.color = Node_rbt.BLACK
-                        w.color = Node_rbt.RED
-                        self.__right_rotate(w)
-                        w = x.parent.right
-                    w.color = x.parent.color
-                    x.parent.color = Node_rbt.BLACK
-                    w.right.color = Node_rbt.BLACK
-                    self.__left_rotate(x.parent)
-                    x = self.root
-            else:
-                w = x.parent.left
-                if w.color == Node_rbt.RED:
-                    w.color = Node_rbt.BLACK
-                    x.parent.color = Node_rbt.RED
-                    self.__right_rotate(x.parent)
-                    w = x.parent.left
-                if w.right.color == Node_rbt.BLACK and w.left.color == Node_rbt.BLACK:
-                    w.color = Node_rbt.RED
-                    x = x.parent
-                else:
-                    if w.left.color == Node_rbt.BLACK:
-                        w.right.color = Node_rbt.BLACK
-                        w.color = Node_rbt.RED
-                        self.__left_rotate(w)
-                        w = x.parent.left
-                    w.color = x.parent.color
-                    x.parent.color = Node_rbt.BLACK
-                    w.left.color = Node_rbt.BLACK
-                    self.__right_rotate(x.parent)
-                    x = self.root
-        x.color = Node_rbt.BLACK
-
 
 if __name__ == "__main__":
 
