@@ -1,6 +1,8 @@
 import random
 import matplotlib.pyplot as plt
 
+cont = 0
+
 
 def create_vector_to_insertion(case, nodes):
     insertion = []
@@ -10,7 +12,7 @@ def create_vector_to_insertion(case, nodes):
             insertion.append(_)
     elif case == 1:
         while len(insertion) < nodes:
-            n = random.randint(0, 100000)
+            n = random.randint(0, 10000)
             if n not in insertion:
                 insertion.append(n)
 
@@ -19,15 +21,14 @@ def create_vector_to_insertion(case, nodes):
 
 def generate_numbers_to_search():
 
-    numbers = []
+    index = []
 
-    for _ in range(100):
-        while len(numbers) < 100:
-            n = random.randint(0, 100000)
-            if n not in numbers:
-                numbers.append(n)
+    while len(index) < 100:
+        n = random.randint(0, 999)
+        if n not in index:
+            index.append(n)
 
-    return numbers
+    return index
 
 
 class Node:
@@ -85,8 +86,6 @@ class bst:
             elif key_search > node.key:
                 self.cont += 1
                 self.search(node.right, key_search)
-            else:
-                print(self.cont)
 
 
 class avl:
@@ -207,18 +206,17 @@ class avl:
 
         return inlist
 
-    def search(self, key_search, cont):
+    def search(self, key_search):
+        global cont
         tree = self.node
 
         if tree is not None:
             if key_search < tree.key:
                 cont += 1
-                self.node.left.search(key_search, cont)
+                self.node.left.search(key_search)
             elif key_search > tree.key:
                 cont += 1
-                self.node.right.search(key_search, cont)
-            else:
-                print(cont)
+                self.node.right.search(key_search)
 
 
 class Node_rbt:
@@ -510,9 +508,6 @@ class rbt:
 
 if __name__ == "__main__":
 
-    cost = []
-    cost2 = []
-    p = 0
     while True:
         try:
 
@@ -537,19 +532,15 @@ if __name__ == "__main__":
                 for _ in range(number_nodes):
                     tree_bst.insert(elements[_])
                     print(elements[_], end=' ')
-                    # if _ % 1000 == 0:
-                    #     cost.append(p)
-                    #     cost2.append(tree_bst.cont)
-                    # p += 1
 
                 print()
-                #tree_bst.view_in_order(tree_bst.root)
-                tree_bst.search(tree_bst.root, 100)
-                # plt.plot(cost, cost2, color='red')
-                # plt.title('complexity')
-                # plt.xlabel('elements')
-                # plt.ylabel('search')
-                # plt.show()
+                # tree_bst.view_in_order(tree_bst.root)
+                index_search = generate_numbers_to_search()
+                print('searching for {}'.format(len(index_search)), 'numbers')
+                for _ in range(len(index_search)):
+                    tree_bst.search(tree_bst.root, elements[index_search[_]])
+
+                print('media = {}'.format(tree_bst.cont / 100))
 
             elif type_tree == 1:
                 print('tree avl')
@@ -561,7 +552,13 @@ if __name__ == "__main__":
                 print()
                 # for _ in tree_avl.view_in_order():
                 #     print(_, end=' ')
-                tree_avl.search(100, 0)
+                index_search = generate_numbers_to_search()
+                print('searching for {}'.format(len(index_search)), 'numbers')
+                for _ in range(len(index_search)):
+                    tree_avl.search(elements[index_search[_]])
+
+                print(cont / 100)
+
             elif type_tree == 2:
                 print('tree rbt')
                 tree_rbt = rbt()
@@ -569,8 +566,8 @@ if __name__ == "__main__":
                     tree_rbt.add(elements[_])
                     print(elements[_], end=' ')
                 print()
-                for key in tree_rbt.view_in_order():
-                    print(key, end=' ')
+                for _ in tree_rbt.view_in_order():
+                    print(_, end=' ')
             else:
                 break
 
