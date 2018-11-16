@@ -17,6 +17,19 @@ def create_vector_to_insertion(case, nodes):
     return insertion
 
 
+def generate_numbers_to_search():
+
+    numbers = []
+
+    for _ in range(100):
+        while len(numbers) < 100:
+            n = random.randint(0, 100000)
+            if n not in numbers:
+                numbers.append(n)
+
+    return numbers
+
+
 class Node:
 
     def __init__(self, key):
@@ -43,7 +56,6 @@ class bst:
                     if current_node.left:
                         current_node = current_node.left
                     else:
-                        self.cont += 1
                         current_node.left = Node(key)
                         break
 
@@ -51,7 +63,6 @@ class bst:
                     if current_node.right:
                         current_node = current_node.right
                     else:
-                        self.cont += 1
                         current_node.right = Node(key)
                         break
 
@@ -65,6 +76,18 @@ class bst:
             print(node.key, end=' ')
             self.view_in_order(node.right)
 
+    def search(self, node, key_search):
+        if node is not None:
+            if key_search < node.key:
+                self.cont += 1
+                self.search(node.left, key_search)
+
+            elif key_search > node.key:
+                self.cont += 1
+                self.search(node.right, key_search)
+            else:
+                print(self.cont)
+
 
 class avl:
 
@@ -72,7 +95,6 @@ class avl:
         self.node = None
         self.height = -1
         self.balance = 0
-        self.cont = 0
 
     def height(self):
         if self.node:
@@ -184,6 +206,19 @@ class avl:
             inlist.append(i)
 
         return inlist
+
+    def search(self, key_search, cont):
+        tree = self.node
+
+        if tree is not None:
+            if key_search < tree.key:
+                cont += 1
+                self.node.left.search(key_search, cont)
+            elif key_search > tree.key:
+                cont += 1
+                self.node.right.search(key_search, cont)
+            else:
+                print(cont)
 
 
 class Node_rbt:
@@ -502,19 +537,19 @@ if __name__ == "__main__":
                 for _ in range(number_nodes):
                     tree_bst.insert(elements[_])
                     print(elements[_], end=' ')
-                    if _ % 1000 == 0:
-                        cost.append(p)
-                        cost2.append(tree_bst.cont)
-                    p += 1
+                    # if _ % 1000 == 0:
+                    #     cost.append(p)
+                    #     cost2.append(tree_bst.cont)
+                    # p += 1
 
                 print()
-                # tree_bst.view_in_order(tree_bst.root)
-
-                plt.plot(cost, cost2, color='red')
-                plt.title('complexity')
-                plt.xlabel('elements')
-                plt.ylabel('search')
-                plt.show()
+                #tree_bst.view_in_order(tree_bst.root)
+                tree_bst.search(tree_bst.root, 100)
+                # plt.plot(cost, cost2, color='red')
+                # plt.title('complexity')
+                # plt.xlabel('elements')
+                # plt.ylabel('search')
+                # plt.show()
 
             elif type_tree == 1:
                 print('tree avl')
@@ -522,13 +557,11 @@ if __name__ == "__main__":
                 for _ in range(number_nodes):
                     tree_avl.insert(elements[_])
                     print(elements[_], end=' ')
-                    if _ % 1000 == 0:
-                        cost.append(tree_avl.cont)
-                        cost2.append(p)
-                    p += 1
+
                 print()
-                for _ in tree_avl.view_in_order():
-                    print(_, end=' ')
+                # for _ in tree_avl.view_in_order():
+                #     print(_, end=' ')
+                tree_avl.search(100, 0)
             elif type_tree == 2:
                 print('tree rbt')
                 tree_rbt = rbt()
