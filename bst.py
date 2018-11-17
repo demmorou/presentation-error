@@ -13,7 +13,7 @@ def create_vector_to_insertion(case, nodes):
             insertion.append(_)
     elif case == 1:
         while len(insertion) < nodes:
-            n = random.randint(0, 10000)
+            n = random.randint(0, 1000)
             if n not in insertion:
                 insertion.append(n)
 
@@ -281,6 +281,7 @@ class NilNode_rbt(Node_rbt):
 
 class rbt:
     def __init__(self):
+        self.cont = 0
         self.root = NilNode_rbt.instance()
         self.size = 0
 
@@ -357,8 +358,10 @@ class rbt:
         if x is None: x = self.root
         while x and x.key != key:
             if key < x.key:
+                self.cont += 1
                 x = x.left
             else:
+                self.cont += 1
                 x = x.right
         return x
 
@@ -479,10 +482,15 @@ if __name__ == "__main__":
                     tree_rbt.add(elements[_])
                     print(elements[_], end=' ')
                 print()
-                for _ in tree_rbt.view_in_order():
-                    print(_, end=' ')
+                #for _ in tree_rbt.view_in_order():
+                #    print(_, end=' ')
+                index_search = generate_numbers_to_search()
+                print('searching for {}'.format(len(index_search)), 'numbers')
+                for _ in range(len(index_search)):
+                    tree_rbt.search(elements[index_search[_]])
 
-                print(tree_rbt.search(4))
+                print('media = {}'.format(tree_rbt.cont / 100))
+
             else:
                 break
 
