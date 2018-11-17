@@ -1,5 +1,6 @@
 import random
-import matplotlib.pyplot as plt
+import sys
+sys.setrecursionlimit(12000)
 
 cont = 0
 
@@ -24,7 +25,7 @@ def generate_numbers_to_search():
     index = []
 
     while len(index) < 100:
-        n = random.randint(0, 999)
+        n = random.randint(0, 9999)
         if n not in index:
             index.append(n)
 
@@ -72,10 +73,22 @@ class bst:
 
     def view_in_order(self, node):
 
-        if node is not None:
-            self.view_in_order(node.left)
-            print(node.key, end=' ')
-            self.view_in_order(node.right)
+        if node is None:
+            return []
+
+        inlist = []
+
+        l = self.view_in_order(node.left)
+        for i in l:
+            inlist.append(i)
+
+        inlist.append(node.key)
+
+        l = self.view_in_order(node.right)
+        for i in l:
+            inlist.append(i)
+
+        return inlist
 
     def search(self, node, key_search):
         if node is not None:
@@ -404,6 +417,7 @@ class rbt:
 
         self.size += 1
 
+
 if __name__ == "__main__":
 
     while True:
@@ -432,7 +446,8 @@ if __name__ == "__main__":
                     print(elements[_], end=' ')
 
                 print()
-                # tree_bst.view_in_order(tree_bst.root)
+                for _ in tree_bst.view_in_order(tree_bst.root):
+                    print(_, end=' ')
                 index_search = generate_numbers_to_search()
                 print('searching for {}'.format(len(index_search)), 'numbers')
                 for _ in range(len(index_search)):
@@ -455,7 +470,7 @@ if __name__ == "__main__":
                 for _ in range(len(index_search)):
                     tree_avl.search(elements[index_search[_]])
 
-                print(cont / 100)
+                print('media = {}'.format(cont / 100))
 
             elif type_tree == 2:
                 print('tree rbt')
@@ -466,6 +481,8 @@ if __name__ == "__main__":
                 print()
                 for _ in tree_rbt.view_in_order():
                     print(_, end=' ')
+
+                print(tree_rbt.search(4))
             else:
                 break
 
