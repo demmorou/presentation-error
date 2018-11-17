@@ -13,7 +13,7 @@ def create_vector_to_insertion(case, nodes):
             insertion.append(_)
     elif case == 1:
         while len(insertion) < nodes:
-            n = random.randint(0, 1000)
+            n = random.randint(0, 11000)
             if n not in insertion:
                 insertion.append(n)
 
@@ -482,7 +482,7 @@ if __name__ == "__main__":
                     tree_rbt.add(elements[_])
                     print(elements[_], end=' ')
                 print()
-                #for _ in tree_rbt.view_in_order():
+                # for _ in tree_rbt.view_in_order():
                 #    print(_, end=' ')
                 index_search = generate_numbers_to_search()
                 print('searching for {}'.format(len(index_search)), 'numbers')
