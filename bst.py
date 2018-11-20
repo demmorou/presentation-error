@@ -276,6 +276,11 @@ class avl:
 
 
 class Node_rbt:
+
+    """
+    this class implement the Node for the tree rbt.
+    """
+
     RED = True
     BLACK = False
 
@@ -323,6 +328,10 @@ class NilNode_rbt(Node_rbt):
 
 
 class rbt:
+    """
+    this class implement the methods of the rbt tree
+    """
+
     def __init__(self):
         self.cont = 0
         self.root = NilNode_rbt.instance()
@@ -373,12 +382,6 @@ class rbt:
         if x is None: x = self.root
         while x.left:
             x = x.left
-        return x
-
-    def maximum(self, x=None):
-        if x is None: x = self.root
-        while x.right:
-            x = x.right
         return x
 
     def successor(self, x):
