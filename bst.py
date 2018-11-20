@@ -109,7 +109,7 @@ class bst:
 
     def search(self, node, key_search):
         """
-        this function was used to search in the tree bst
+        this function was used to search in the bst tree
         :param node: current node
         :param key_search: key to search
         :return: does not exist
@@ -125,13 +125,20 @@ class bst:
 
 
 class avl:
-
+    """
+    this class implement the methods of the avl tree
+    """
     def __init__(self):
         self.node = None
         self.height = -1
         self.balance = 0
 
     def insert(self, key):
+        """
+        this function implement the insertion in the tree
+        :param key: key to insert
+        :return: does not exist
+        """
         tree = self.node
 
         new_node = Node(key)
@@ -150,10 +157,15 @@ class avl:
         self.balance_tree()
 
     def balance_tree(self):
-
+        """
+        this function implement the balancing in the tree. she does not use double rotate (left or right),
+        it applies rotations until the balancing factor is satisfied.
+        in the our case, while the balance factor > 1, apply the rotations.
+        :return: does not exist
+        """
         self.update_heights(False)
         self.update_balances(False)
-        while self.balance < -1 or self.balance > 1:  # while the balance factor > 1, apply the rotations
+        while self.balance < -1 or self.balance > 1:
             if self.balance > 1:
                 if self.node.left.balance < 0:
                     self.node.left.left_rotate()
@@ -165,7 +177,7 @@ class avl:
 
             if self.balance < -1:
                 if self.node.right.balance > 0:
-                    self.node.right.right_rotate()  # we're in case III
+                    self.node.right.right_rotate()
                     self.update_heights()
                     self.update_balances()
                 self.left_rotate()
@@ -173,6 +185,10 @@ class avl:
                 self.update_balances()
 
     def right_rotate(self):
+        """
+        this function implement the right rotation
+        :return: doest not exist
+        """
         a = self.node
         b = self.node.left.node
         t = b.right.node
@@ -182,6 +198,10 @@ class avl:
         a.left.node = t
 
     def left_rotate(self):
+        """
+        this function implement the right rotation
+        :return: does not exist
+        """
         a = self.node
         b = self.node.right.node
         t = b.left.node
@@ -191,6 +211,11 @@ class avl:
         a.right.node = t
 
     def update_heights(self, recurse=True):
+        """
+        this function implement the update of the heights in the nodes
+        :param recurse: this parameter is used to force the update of the nodes
+        :return: does not exist
+        """
         if not self.node is None:
             if recurse:
                 if self.node.left is not None:
@@ -203,6 +228,11 @@ class avl:
             self.height = -1
 
     def update_balances(self, recurse=True):
+        """
+        this function implement the update of the balance factor in the nodes
+        :param recurse: this parameter is used to force the update of the nodes
+        :return: does not exist
+        """
         if not self.node is None:
             if recurse:
                 if self.node.left is not None:
@@ -215,6 +245,10 @@ class avl:
             self.balance = 0
 
     def view_in_order(self):
+        """
+        this function implement the method of view in order
+        :return: does not exist
+        """
 
         tree = self.node
 
@@ -224,6 +258,11 @@ class avl:
             self.node.right.view_in_order()
 
     def search(self, key_search):
+        """
+        this function was used to search in the avl tree
+        :param key_search: key to search
+        :return:
+        """
         global cont
         tree = self.node
 
