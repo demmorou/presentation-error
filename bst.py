@@ -6,6 +6,12 @@ cont = 0
 
 
 def create_vector_to_insertion(case, nodes):
+    """
+    :param case: number of test cases
+    :param nodes: number of insertion nodes
+    :return: list with all numbers drawn for insertion
+    """
+
     insertion = []
 
     if case == 0:
@@ -21,6 +27,10 @@ def create_vector_to_insertion(case, nodes):
 
 
 def generate_numbers_to_search():
+    """
+    this function was used to generate numbers for searches
+    :return: list with all index to search
+    """
 
     index = []
 
@@ -33,14 +43,23 @@ def generate_numbers_to_search():
 
 
 class Node:
+    """
+    this class implement the Node for the trees avl and bst.
+    """
 
     def __init__(self, key):
+        """
+        :param key: key to insert
+        """
         self.key = key
         self.left = None
         self.right = None
 
 
 class bst:
+    """
+    this class implement the methods of the bst tree
+    """
 
     def __init__(self):
 
@@ -48,6 +67,11 @@ class bst:
         self.cont = 0
 
     def insert(self, key):
+        """
+        this function implement the insertion
+        :param key: key to insert
+        :return: does not exist
+        """
 
         if self.root is None:
             self.root = Node(key)  # insert element in root node
@@ -72,25 +96,24 @@ class bst:
                     break
 
     def view_in_order(self, node):
+        """
+        this function implement the method of view in order
+        :param node: initially, with root node
+        :return: does not exist
+        """
 
-        if node is None:
-            return []
-
-        inlist = []
-
-        l = self.view_in_order(node.left)
-        for i in l:
-            inlist.append(i)
-
-        inlist.append(node.key)
-
-        l = self.view_in_order(node.right)
-        for i in l:
-            inlist.append(i)
-
-        return inlist
+        if node is not None:
+            self.view_in_order(node.left)
+            print(node.key, end=' ')
+            self.view_in_order(node.right)
 
     def search(self, node, key_search):
+        """
+        this function was used to search in the tree bst
+        :param node: current node
+        :param key_search: key to search
+        :return: does not exist
+        """
         if node is not None:
             if key_search < node.key:
                 self.cont += 1
@@ -108,15 +131,6 @@ class avl:
         self.height = -1
         self.balance = 0
 
-    def height(self):
-        if self.node:
-            return self.node.height
-        else:
-            return 0
-
-    def is_leaf(self):
-        return self.height == 0
-
     def insert(self, key):
         tree = self.node
 
@@ -133,33 +147,32 @@ class avl:
         elif key > tree.key:
             self.node.right.insert(key)
 
-        self.rebalance()
+        self.balance_tree()
 
-    def rebalance(self):
+    def balance_tree(self):
 
         self.update_heights(False)
         self.update_balances(False)
-        while self.balance < -1 or self.balance > 1:
+        while self.balance < -1 or self.balance > 1:  # while the balance factor > 1, apply the rotations
             if self.balance > 1:
                 if self.node.left.balance < 0:
-                    self.node.left.lrotate()  # we're in case II
+                    self.node.left.left_rotate()
                     self.update_heights()
                     self.update_balances()
-                self.rrotate()
+                self.right_rotate()
                 self.update_heights()
                 self.update_balances()
 
             if self.balance < -1:
                 if self.node.right.balance > 0:
-                    self.node.right.rrotate()  # we're in case III
+                    self.node.right.right_rotate()  # we're in case III
                     self.update_heights()
                     self.update_balances()
-                self.lrotate()
+                self.left_rotate()
                 self.update_heights()
                 self.update_balances()
 
-    def rrotate(self):
-        # Rotate left pivoting on self
+    def right_rotate(self):
         a = self.node
         b = self.node.left.node
         t = b.right.node
@@ -168,15 +181,14 @@ class avl:
         b.right.node = a
         a.left.node = t
 
-    def lrotate(self):
-        # Rotate left pivoting on self
-        A = self.node
+    def left_rotate(self):
+        a = self.node
         b = self.node.right.node
         t = b.left.node
 
         self.node = b
-        b.left.node = A
-        A.right.node = t
+        b.left.node = a
+        a.right.node = t
 
     def update_heights(self, recurse=True):
         if not self.node is None:
@@ -203,21 +215,13 @@ class avl:
             self.balance = 0
 
     def view_in_order(self):
-        if self.node is None:
-            return []
 
-        inlist = []
-        l = self.node.left.view_in_order()
-        for i in l:
-            inlist.append(i)
+        tree = self.node
 
-        inlist.append(self.node.key)
-
-        l = self.node.right.view_in_order()
-        for i in l:
-            inlist.append(i)
-
-        return inlist
+        if tree is not None:
+            self.node.left.view_in_order()
+            print(tree.key, end=' ')
+            self.node.right.view_in_order()
 
     def search(self, key_search):
         global cont
@@ -436,40 +440,41 @@ if __name__ == "__main__":
             elements = create_vector_to_insertion(test_case, number_nodes)
 
             if type_tree == 0:
-
-                print('bst')
                 tree_bst = bst()
+                print('bst')
 
                 for _ in range(number_nodes):
                     tree_bst.insert(elements[_])
-                    print(elements[_], end=' ')
+                    print(elements[_], end=' ')  # view insertion sequence
 
                 print()
-                for _ in tree_bst.view_in_order(tree_bst.root):
-                    print(_, end=' ')
+                tree_bst.view_in_order(tree_bst.root)
+                '''
                 index_search = generate_numbers_to_search()
                 print('searching for {}'.format(len(index_search)), 'numbers')
                 for _ in range(len(index_search)):
-                    tree_bst.search(tree_bst.root, elements[index_search[_]])
+                     tree_bst.search(tree_bst.root, elements[index_search[_]])
 
                 print('media = {}'.format(tree_bst.cont / 100))
+                '''
 
             elif type_tree == 1:
                 print('tree avl')
                 tree_avl = avl()
                 for _ in range(number_nodes):
                     tree_avl.insert(elements[_])
-                    print(elements[_], end=' ')
+                    print(elements[_], end=' ')  # view insertion sequence
 
                 print()
-                # for _ in tree_avl.view_in_order():
-                #     print(_, end=' ')
+                tree_avl.view_in_order()
+                '''
                 index_search = generate_numbers_to_search()
                 print('searching for {}'.format(len(index_search)), 'numbers')
                 for _ in range(len(index_search)):
                     tree_avl.search(elements[index_search[_]])
 
                 print('media = {}'.format(cont / 100))
+                '''
 
             elif type_tree == 2:
                 print('tree rbt')
