@@ -292,7 +292,7 @@ class rbt:
         self.insert(Node_rbt(key))
 
     def insert(self, x):
-        self.__insert_helper(x)
+        self.insert_helper(x)
 
         x.color = Node_rbt.RED
         while x != self.root and x.parent.color == Node_rbt.RED:
@@ -306,10 +306,10 @@ class rbt:
                 else:
                     if x == x.parent.right:
                         x = x.parent
-                        self.__left_rotate(x)
+                        self.left_rotate(x)
                     x.parent.color = Node_rbt.BLACK
                     x.parent.parent.color = Node_rbt.RED
-                    self.__right_rotate(x.parent.parent)
+                    self.right_rotate(x.parent.parent)
             else:
                 y = x.parent.parent.left
                 if y and y.color == Node_rbt.RED:
@@ -320,10 +320,10 @@ class rbt:
                 else:
                     if x == x.parent.left:
                         x = x.parent
-                        self.__right_rotate(x)
+                        self.right_rotate(x)
                     x.parent.color = Node_rbt.BLACK
                     x.parent.parent.color = Node_rbt.RED
-                    self.__left_rotate(x.parent.parent)
+                    self.left_rotate(x.parent.parent)
         self.root.color = Node_rbt.BLACK
 
     def minimum(self, x=None):
@@ -365,9 +365,7 @@ class rbt:
                 x = x.right
         return x
 
-    def __left_rotate(self, x):
-        if not x.right:
-            raise "x.right is nil!"
+    def left_rotate(self, x):
         y = x.right
         x.right = y.left
         if y.left: y.left.parent = x
@@ -382,9 +380,7 @@ class rbt:
         y.left = x
         x.parent = y
 
-    def __right_rotate(self, x):
-        if not x.left:
-            raise "x.left is nil!"
+    def right_rotate(self, x):
         y = x.left
         x.left = y.right
         if y.right: y.right.parent = x
@@ -399,7 +395,7 @@ class rbt:
         y.right = x
         x.parent = y
 
-    def __insert_helper(self, z):
+    def insert_helper(self, z):
         y = NilNode_rbt.instance()
         x = self.root
         while x:
@@ -482,6 +478,7 @@ if __name__ == "__main__":
                     tree_rbt.add(elements[_])
                     print(elements[_], end=' ')
                 print()
+
                 # for _ in tree_rbt.view_in_order():
                 #    print(_, end=' ')
                 index_search = generate_numbers_to_search()
