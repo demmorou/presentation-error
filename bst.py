@@ -307,6 +307,10 @@ class Node_rbt:
 
 
 class NilNode_rbt(Node_rbt):
+    """
+    this class implement the NilNode for the tree rbt.
+    """
+
     __instance__ = None
 
     @classmethod
@@ -337,13 +341,20 @@ class rbt:
         self.root = NilNode_rbt.instance()
         self.size = 0
 
-    def __str__(self):
-        return ("(root.size = %d)\n" % self.size) + str(self.root)
-
     def add(self, key):
+        """
+        this function implement the method to call the insert function
+        :param key: value of key
+        :return: does not exist
+        """
         self.insert(Node_rbt(key))
 
     def insert(self, x):
+        """
+        this function implement the method of insertion
+        :param x: value
+        :return: does not exist
+        """
         self.insert_helper(x)
 
         x.color = Node_rbt.RED
@@ -379,12 +390,22 @@ class rbt:
         self.root.color = Node_rbt.BLACK
 
     def minimum(self, x=None):
+        """
+         this function implement the method of minimum
+         :param x: value
+         :return: minimum
+         """
         if x is None: x = self.root
         while x.left:
             x = x.left
         return x
 
     def successor(self, x):
+        """
+        this function implement the method of successor
+        :param x: value
+        :return: successor
+        """
         if x.right:
             return self.minimum(x.right)
         y = x.parent
@@ -394,6 +415,11 @@ class rbt:
         return y
 
     def view_in_order(self, x=None):
+        """
+        this function implement the method of view in order
+        :param x: value
+        :return: does not exist
+        """
         if x is None: x = self.root
         x = self.minimum()
         while x:
@@ -401,6 +427,12 @@ class rbt:
             x = self.successor(x)
 
     def search(self, key, x=None):
+        """
+        this function was used to search in the rbt tree
+        :param key: key to search
+        :param x: value
+        :return: search
+        """
         if x is None: x = self.root
         while x and x.key != key:
             if key < x.key:
@@ -412,6 +444,11 @@ class rbt:
         return x
 
     def left_rotate(self, x):
+        """
+        this function implement the left rotation
+        :param x: value
+        :return: doest not exist
+        """
         y = x.right
         x.right = y.left
         if y.left: y.left.parent = x
@@ -427,6 +464,11 @@ class rbt:
         x.parent = y
 
     def right_rotate(self, x):
+        """
+        this function implement the right rotation
+        :param x: value
+        :return: doest not exist
+        """
         y = x.left
         x.left = y.right
         if y.right: y.right.parent = x
@@ -442,6 +484,11 @@ class rbt:
         x.parent = y
 
     def insert_helper(self, z):
+        """
+        this function implement the method of insert helper
+        :param z: value
+        :return: does not exist
+        """
         y = NilNode_rbt.instance()
         x = self.root
         while x:
@@ -526,15 +573,16 @@ if __name__ == "__main__":
                     print(elements[_], end=' ')
                 print()
 
-                # for _ in tree_rbt.view_in_order():
-                #    print(_, end=' ')
+                for _ in tree_rbt.view_in_order():
+                    print(_, end=' ')
+                '''    
                 index_search = generate_numbers_to_search()
                 print('searching for {}'.format(len(index_search)), 'numbers')
                 for _ in range(len(index_search)):
                     tree_rbt.search(elements[index_search[_]])
 
                 print('media = {}'.format(tree_rbt.cont / 100))
-
+                '''
             else:
                 break
 
