@@ -13,7 +13,7 @@ def graph_1():
     t_n_rbt = [8.04, 9.29, 9.65, 10.06, 10.91, 11.17, 11.34, 11.67, 12.1, 12.05]
 
     line1, = plt.plot(n, t_n_bst, 'go', label='bst', linestyle='--')
-    line2, = plt.plot(n, t_n_avl, 'bo', label='avl', linestyle='--')
+    line2, = plt.plot(n, t_n_avl, 'ro', label='avl', linestyle='--')
     line3, = plt.plot(n, t_n_rbt, 'ro', label='rbt', linestyle='--')
 
     plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
@@ -45,4 +45,4 @@ def graph_2():
 
 
 if __name__ == '__main__':
-    graph_1()
+    graph_2()
